@@ -11,8 +11,8 @@ class Contact(Base):
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
     email = Column(String(150), unique=True, index=True, nullable=False)
-    phone = Column(String(30), nullable=False)
+    phone = Column(String(30), unique=True, nullable=False)
     birthday = Column(Date, nullable=True)
 
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     owner = relationship("User", back_populates="contacts")

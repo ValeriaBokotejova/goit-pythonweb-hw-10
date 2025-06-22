@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -16,7 +16,7 @@ from app.services.contacts import (
     update_contact,
 )
 
-router = APIRouter()
+router = APIRouter(prefix="/contacts", tags=["Contacts"])
 
 
 @router.post("/", response_model=ContactRead, status_code=status.HTTP_201_CREATED)
@@ -30,14 +30,16 @@ async def create_contact_view(
 
 @router.get("/", response_model=List[ContactRead])
 async def list_contacts(
+    skip: int = 0,
+    limit: int = 10,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return await get_contacts(db, current_user)
+    return await get_contacts(skip, limit, db, current_user)
 
 
 @router.get("/upcoming/birthdays", response_model=List[ContactRead])
-async def upcoming_birthdays(
+async def upcoming_birthdays_view(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

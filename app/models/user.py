@@ -13,5 +13,7 @@ class User(Base):
     password = Column(String, nullable=False)
     avatar = Column(String, nullable=True)
     is_verified = Column(Boolean, default=False)
+    avatar = Column(String, nullable=True)
 
-    contacts = relationship("Contact", back_populates="owner")
+    # Relationship to contacts
+    contacts = relationship("Contact", back_populates="owner", cascade="all, delete")
